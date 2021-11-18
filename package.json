@@ -14,13 +14,21 @@
     "API-REST",
     "Portal",
     "Node",
+    "ExpressJS",
     "JS",
-    "React."
+    "React",
+    "MySQL"
   ],
   "author": "Adrian Zavaleta, Jorge Bernal, Bruno Paz.",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ZavaletaAdrian/PortalJS/issues"
   },
-  "homepage": "https://github.com/ZavaletaAdrian/PortalJS#readme"
+  "homepage": "",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1"
+  }
 }
