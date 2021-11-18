@@ -1,0 +1,26 @@
+{
+  "name": "portaljs",
+  "version": "1.0.0",
+  "description": "Recreation of web page Portal UAQ using an API REST with ExpressJS.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZavaletaAdrian/PortalJS.git"
+  },
+  "keywords": [
+    "API-REST",
+    "Portal",
+    "Node",
+    "JS",
+    "React."
+  ],
+  "author": "Adrian Zavaleta, Jorge Bernal, Bruno Paz.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZavaletaAdrian/PortalJS/issues"
+  },
+  "homepage": "https://github.com/ZavaletaAdrian/PortalJS#readme"
+}
