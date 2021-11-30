@@ -26,6 +26,8 @@ db.sync()
 const app = express()
 
 // The routes
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use('/',routes())
 
 // First for production and second for dev
