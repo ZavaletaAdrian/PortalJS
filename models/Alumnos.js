@@ -54,6 +54,12 @@ Alumnos.hasOne(MateriasCursadas,{
         name: 'alumnoId',
         allowNull: false
     }
+}, {
+    hooks:{
+        beforeCreate(alumno){
+            alumno.nip = bcrypt.hashSync(alumno.nip,bcrypt.genSaltSync(10))
+        }
+    }
 })
 
 Alumnos.prototype.verificarPassword = function(nip){
