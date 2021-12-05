@@ -7,7 +7,7 @@ const Sequelize = require('sequelize')
 exports.crearAlumno = async(req,res,next)=> {
   const { exp, nip } = req.body;
   await Alumnos.create({
-    exp,
+    expediente:exp,
     nip
   })
   

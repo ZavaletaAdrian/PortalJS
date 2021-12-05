@@ -18,13 +18,13 @@ const DatosPadres = db.define('datosPadres',{
 DatosPadres.hasOne(Alumnos,{
     foreignKey: {
         name: 'datosPadreId',
-        allowNull: false
+        allowNull: true
     }
 })
 DatosPadres.hasOne(Alumnos,{
     foreignKey: {
         name: 'datosMadreId',
-        allowNull: false
+        allowNull: true
     }
 })
 module.exports = DatosPadres

@@ -15,7 +15,7 @@ const Institucion = db.define('institucion',{
 Institucion.hasOne(Alumnos,{
     foreignKey: {
         name: 'institucionId',
-        allowNull: false
+        allowNull: true
     }
 })
 

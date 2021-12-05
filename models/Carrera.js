@@ -15,7 +15,7 @@ const Carrera = db.define('carrera',{
 Carrera.hasOne(Alumnos,{
     foreignKey: {
         name: 'carreraId',
-        allowNull: false
+        allowNull: true
     }
 })
 

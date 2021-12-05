@@ -22,14 +22,14 @@ const DatosPersonales = db.define('datosPersonales',{
 DatosPersonales.hasOne(Alumnos,{
     foreignKey: {
         name: 'datosPersonalesId',
-        allowNull: false
+        allowNull: true
     }
 })
 
 DatosPersonales.hasOne(Profesor,{
     foreignKey: {
         name: 'datosPersonalesId',
-        allowNull: false
+        allowNull: true
     }
 })
 
