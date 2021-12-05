@@ -10,13 +10,9 @@ exports.crearAlumno = async(req,res,next)=> {
     exp,
     nip
   })
-  .then(()=>{
-    return res.status(500).json({message:'creado exitosamente'}) 
-  })
-  .error(()=>{
-    return res.status(500).json({message:'Alog salio mal'})
-  })
-
+  
+  return res.status(500).json({message:'creado exitosamente'}) 
+  
 }
 
 
