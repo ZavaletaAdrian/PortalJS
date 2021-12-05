@@ -8,7 +8,7 @@ const Municipios = db.define('municipios',{
         primaryKey: true,
         autoIncrement: true
     },
-    nombre:Sequelize.INTEGER,
+    nombre:Sequelize.STRING,
     
 })
 

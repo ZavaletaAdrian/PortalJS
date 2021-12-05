@@ -8,7 +8,7 @@ const Paises = db.define('paises',{
         primaryKey: true,
         autoIncrement: true
     },
-    nombre:Sequelize.INTEGER
+    nombre:Sequelize.STRING
 })
 
 Paises.hasOne(DatosPersonales,{

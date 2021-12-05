@@ -8,7 +8,7 @@ const Estados = db.define('estados',{
         primaryKey: true,
         autoIncrement: true
     },
-    nombre:Sequelize.INTEGER,
+    nombre:Sequelize.STRING,
     
 })
 

@@ -2,21 +2,13 @@ const Sequelize = require('sequelize')
 const db = require('../config/db')
 const bcrypt = require('bcrypt-nodejs')
 const MateriasEnCurso = require('../models/MateriasEnCurso')
+const MateriasCursadas = require('./MateriasCursadas')
 
 const Alumnos = db.define('alumnos',{
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
     expediente: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        validate: {
-            notEmpty:{
-                msg:'el expediente no puede ir vacio'
-            }
-        }
+        primaryKey: true,
     },
     nip: {
         type: Sequelize.STRING,
@@ -31,7 +23,7 @@ const Alumnos = db.define('alumnos',{
     curp: Sequelize.STRING,
     periodoActivo: Sequelize.INTEGER,
     tipoPeriodo: Sequelize.STRING,
-    reinscrito: Sequelize.INTEGER,
+    reinscrito: Sequelize.STRING,
     vectorInscripcion: Sequelize.INTEGER,
     vectorInscripcionEgresado: Sequelize.INTEGER,
     semestre: Sequelize.INTEGER,
@@ -40,19 +32,24 @@ const Alumnos = db.define('alumnos',{
     maximoNas: Sequelize.INTEGER,
     promedio: Sequelize.FLOAT,
     creditosObtenidos: Sequelize.INTEGER,
-    tipoPeriodo: Sequelize.INTEGER,
     materiasAprobadas: Sequelize.INTEGER,
-    fechaIngreso: Sequelize.DATE,
+    fechaIngreso: Sequelize.DATEONLY,
     activo: {
         type:Sequelize.INTEGER,
         // 0 active 1 inactive
         defaultValue: 0
     },
-    tipoPeriodo: Sequelize.INTEGER,
 
 })
 
 Alumnos.hasMany(MateriasEnCurso,{
+    foreignKey: {
+        name: 'alumnoId',
+        allowNull: false
+    }
+})
+
+Alumnos.hasOne(MateriasCursadas,{
     foreignKey: {
         name: 'alumnoId',
         allowNull: false

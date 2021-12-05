@@ -9,8 +9,6 @@ const MateriasEnCurso = db.define('materiasEnCurso',{
         autoIncrement: true
     },
     grupo:Sequelize.STRING,
-    periodo:Sequelize.INTEGER,
-    horario:Sequelize.STRING,
 })
 
 

@@ -11,11 +11,11 @@ require('./models/DatosPersonales')
 require('./models/Estados')
 require('./models/Institucion')
 require('./models/MateriasEnCurso')
-require('./models/MateriasGeneral')
+require('./models/MateriasPlanEstudios')
 require('./models/Municipios')
 require('./models/Paises')
-require('./models/PlanEstudios')
 require('./models/Profesor')
+require('./models/MateriasCursadas')
 
 // The models will be created on the db and then the conection to it will ocurr
 db.sync()
