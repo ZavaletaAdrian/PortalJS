@@ -30,3 +30,17 @@ exports.loginID = async (req, res, next) => {
   }
   return res.status(500).json({ code: 500, message: "Campos incompletos!" });
 };
+
+exports.alumnoInfo = async (req, res, next) => {
+  const { id } = req.body;
+
+  var query = `SELECT a.expediente, a.IMSS, a.CURP, pe.nombre, pe.duracion, pe.inscripcionesPermitidas, pe.totalMaterias, pe.totalCreditos, a.periodoActivo, a.tipoPeriodo, a.reinscrito, a.vectorInscripcion, `;
+  query += `a.vectorInscripcionEgresado, a.semestre, a.grupo, a.totalNas, a.maximoNas, a.promedio, a.creditosObtenidos, a.materiasAprobadas,`;
+  query += `a.fechaIngreso, c.nombre, c.clave, i.nombre, i.clave, a.activo FROM alumnos a, carreras c, institucions i, planestudios pe WHERE a.id = ${id} AND `;
+  query += `a.carreraId = c.id AND a.institucionId = i.id AND a.planEstudioId = pe.id`
+  const rows = await db.query(query);
+  console.log(rows.length)
+  return res.status(200).json({ code: 200, message: rows[0] });//"sisoy " + rows[0]
+
+
+}
