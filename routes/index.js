@@ -12,5 +12,9 @@ module.exports = function(){
     router.post('/loginTrabajador',
         trabajadorController.loginID
     )
+    //Data
+    router.get('/alumnoInfo',
+        AlumnosControllers.alumnoInfo
+    )
     return router
 }
