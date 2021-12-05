@@ -16,5 +16,9 @@ module.exports = function(){
     router.get('/alumnoInfo',
         AlumnosControllers.alumnoInfo
     )
+
+    router.post('/crearAlumno',
+        AlumnosControllers.crearAlumno
+    )
     return router
 }
