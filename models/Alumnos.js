@@ -52,14 +52,14 @@ const Alumnos = db.define('alumnos',{
 Alumnos.hasMany(MateriasEnCurso,{
     foreignKey: {
         name: 'alumnoId',
-        allowNull: false
+        allowNull: true
     }
 })
 
 Alumnos.hasOne(MateriasCursadas,{
     foreignKey: {
         name: 'alumnoId',
-        allowNull: false
+        allowNull: true
     }
 })
 

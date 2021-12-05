@@ -15,14 +15,14 @@ const Municipios = db.define('municipios',{
 Municipios.hasOne(DatosPersonales,{
     foreignKey: {
         name: 'municipioNacimientoId',
-        allowNull: false
+        allowNull: true
     }
 })
 
 Municipios.hasOne(DatosPersonales,{
     foreignKey: {
         name: 'municipioId',
-        allowNull: false
+        allowNull: true
     }
 })
 

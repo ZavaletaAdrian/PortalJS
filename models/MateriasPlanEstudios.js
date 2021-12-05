@@ -19,14 +19,14 @@ const MateriasPlanEstudios = db.define('materiasPlanEstudios',{
 MateriasPlanEstudios.hasOne(MateriasEnCurso,{
     foreignKey: {
         name: 'materiasPlanEstudiosId',
-        allowNull: false
+        allowNull: true
     }
 })
 
 MateriasPlanEstudios.hasOne(MateriasCursadas,{
     foreignKey: {
         name: 'materiasPlanEstudiosId',
-        allowNull: false
+        allowNull: true
     }
 })
 

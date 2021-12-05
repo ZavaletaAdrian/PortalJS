@@ -15,7 +15,7 @@ const Estados = db.define('estados',{
 Estados.hasMany(Municipios,{
     foreignKey: {
         name: 'estadoPerteneceId',
-        allowNull: false
+        allowNull: true
     }
 })
 

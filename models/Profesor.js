@@ -17,7 +17,7 @@ const Profesor = db.define('profesor',{
 Profesor.hasMany(MateriasEnCurso,{
     foreignKey: {
         name: 'profesorId',
-        allowNull: false
+        allowNull: true
     }
 })
 

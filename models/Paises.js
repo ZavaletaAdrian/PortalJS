@@ -14,7 +14,7 @@ const Paises = db.define('paises',{
 Paises.hasOne(DatosPersonales,{
     foreignKey: {
         name: 'paisNacimientoId',
-        allowNull: false
+        allowNull: true
     }
 })
 
