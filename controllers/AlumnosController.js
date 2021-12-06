@@ -3,15 +3,20 @@ const db = require("../config/db");
 const jwt = require("jsonwebtoken");
 const Alumnos = require('../models/Alumnos')
 const Sequelize = require('sequelize')
+const bcrypt = require('bcrypt-nodejs')
 
 exports.crearAlumno = async(req,res,next)=> {
   const { exp, nip } = req.body;
-  await Alumnos.create({
-    expediente:exp,
-    nip
-  })
-  
-  return res.status(500).json({message:'creado exitosamente'}) 
+
+  try {
+    await Alumnos.create({
+      expediente:exp,
+      nip
+    })
+    return res.status(200).json({message:'Alumno creado exitosamente'}) 
+  } catch (error) {
+    return res.status(401).json({message: 'El alumno ya existe'})
+  }
   
 }
 
@@ -21,11 +26,13 @@ exports.loginID = async (req, res, next) => {
 
   const alumno = await Alumnos.findOne({where:{expediente:exp}})
 
-  if(alumno.verificarPassword(nip)){
+  // TODO: aqui es donde regresan el token y lo unico que debe tener es el expediente del alumno
+  bcrypt.compare(nip, alumno.nip,(err,valid)=>{
+    if(err)return res.status(400).json({ message: "No eres!" });
+
     return res.status(200).json({  message: "Si eres!" });
-  }else{
-    return res.status(400).json({ message: "No eres!" });
-  }
+  })
+
 
 
   /*if (exp && nip) {

@@ -63,10 +63,4 @@ Alumnos.hasOne(MateriasCursadas,{
     }
 })
 
-Alumnos.prototype.verificarPassword = function(nip){
-    return bcrypt.compareSync(nip, this.nip)
-}
-
-
-
 module.exports = Alumnos
