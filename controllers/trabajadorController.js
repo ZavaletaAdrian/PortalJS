@@ -1,7 +1,11 @@
 // All that is related with Trabajador & Administrativos
-const db = require("../config/db");
 const jwt = require("jsonwebtoken");
+const Alumnos = require("../models/Alumnos");
 const Trabajadores = require("../models/Profesor");
+const DatosPersonales = require("../models/DatosPersonales");
+const MateriasEnCurso = require("../models/MateriasEnCurso");
+const MateriasPlanEstudios = require("../models/MateriasPlanEstudios");
+const MateriasCursadas = require("../models/MateriasCursadas");
 const bcrypt = require("bcrypt-nodejs");
 
 exports.crearTrabajador = async (req, res, next) => {
@@ -43,31 +47,112 @@ exports.loginID = async (req, res, next) => {
   });
 };
 
-// exports.loginID = async (req, res, next) => {
-//   const { numTrabajador, nip } = req.body;
+exports.datosTrabajador = async (req, res, next) => {
+  const { numTrabajador } = req.body;
 
-//   const query = "SELECT id FROM alumnos WHERE ";
-//   query += `numTrabajador = '${numTrabajador}' AND nip = '${nip}';`;
-//   const rows = await db.query(query);
+  let trabajadorData;
 
-//   if (numTrabajador && nip) {
-//     if (rows.length == 1) {
-//       const token = jwt.sign(
-//         {
-//           id: rows[0].id,
-//           numTrabajador: rows[0].numTrabajador,
-//         },
-//         "debugkey"
-//       );
-//       return res.status(200).json({ code: 200, message: token });
-//     } else {
-//       return res
-//         .status(200)
-//         .json({
-//           code: 200,
-//           message: "Numero de trabajador o NIP incorrecto. Intente de nuevo.",
-//         });
-//     }
-//   }
-//   return res.status(500).json({ code: 500, message: "Campos incompletos!" });
-// };
+  try {
+    const trabajador = await Trabajadores.findOne({
+      where: { numTrabajador: numTrabajador },
+      include: { all: true, nested: true },
+    });
+    trabajadorData = trabajador;
+    const datosPer = await DatosPersonales.findOne({
+      where: { id: trabajador.datosPersonaleId },
+    });
+    trabajadorData.datosPersonaleId = datosPer.dataValues;
+    console.log(trabajadorData);
+    return res.status(200).json({ message: trabajadorData }); //"Error al obtener datos del trabajador"
+  } catch (error) {
+    return res
+      .status(401)
+      .json({ message: "Error al obtener datos del trabajador" }); //"Error al obtener datos del trabajador"
+  }
+};
+
+exports.asignarCalificacion = async (req, res, next) => {
+  const {
+    numTrabajador,
+    matEnCurso,
+    calificacionFinal,
+    fechaExamen,
+    fechaPublicacionCalificacion,
+  } = req.body;
+
+  let materiaPorAsignar;
+
+  try {
+    const asignacion = await MateriasEnCurso.findOne({
+      where: { id: matEnCurso },
+    });
+    materiaPorAsignar = asignacion;
+    const profe = await Trabajadores.findOne({
+      where: { numTrabajador: numTrabajador },
+    });
+    materiaPorAsignar.profesorId = profe.dataValues;
+    const matPlanEst = await MateriasPlanEstudios.findOne({
+      where: { cveMat: materiaPorAsignar.materiasPlanEstudiosId },
+    });
+    materiaPorAsignar.materiasPlanEstudiosId = matPlanEst.dataValues;
+
+    try {
+      await MateriasCursadas.create({
+        calificacion: calificacionFinal,
+        acta: Math.random(),
+        fechaExamen: fechaExamen,
+        fechaPublicacionCalificacion: fechaPublicacionCalificacion,
+        alumnoExpediente: materiaPorAsignar.alumnoId,
+        materiasPlanEstudiosId: materiaPorAsignar.materiasPlanEstudiosId.cveMat,
+      });
+      return res
+        .status(200)
+        .json({ message: "Asignacion correcta de calificacion" });
+    } catch (error) {
+      return res
+        .status(401)
+        .json({ message: "Error no se puso la calificacion" });
+    }
+
+    // return res.status(200).json({ message: materiaPorAsignar });
+  } catch (error) {
+    return res.status(401).json({ message: error });
+  }
+};
+
+exports.altaAlumno = async (req, res, next) => {
+  const { exp, nip } = req.body;
+  try {
+    await Alumnos.create({
+      expediente: exp,
+      nip,
+    });
+    return res.status(200).json({ message: "Alumno creado exitosamente" });
+  } catch (error) {
+    return res.status(401).json({ message: "El alumno ya existe" });
+  }
+};
+
+exports.bajaAlumno = async (req, res, next) => {
+  console.log("hola =)");
+  const { exp } = req.body;
+
+  const AlumnoPorDarDeBaja = await Alumnos.findOne({
+    where: { expediente: exp },
+  });
+  console.log(AlumnoPorDarDeBaja);
+
+  try {
+    AlumnoPorDarDeBaja.set({
+      activo: 0,
+    });
+    await AlumnoPorDarDeBaja.save();
+    return res
+      .status(200)
+      .json({ message: "Alumno dado de baja exitosamente" });
+  } catch (error) {
+    return res
+      .status(401)
+      .json({ message: "No se pudo dar de baja al alumno" });
+  }
+};

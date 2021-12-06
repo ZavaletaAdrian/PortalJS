@@ -1,10 +1,10 @@
 // All that is related with Alumnos
 const db = require("../config/db");
 const jwt = require("jsonwebtoken");
-const Alumnos = require("../models/Alumnos");
 const bcrypt = require("bcrypt-nodejs");
 
 //Models
+const Alumnos = require("../models/Alumnos");
 const MateriasEnCurso = require("../models/MateriasEnCurso");
 const Profesor = require("../models/Profesor");
 const MateriasPlanEstudios = require("../models/MateriasPlanEstudios");
@@ -15,20 +15,8 @@ const Municipios = require("../models/Municipios");
 const DatosPadres = require("../models/DatosPadres");
 const DatosPersonales = require("../models/DatosPersonales");
 const Estados = require("../models/Estados");
+const MateriasCursadas = require("../models/MateriasCursadas");
 
-exports.crearAlumno = async (req, res, next) => {
-  const { exp, nip } = req.body;
-
-  try {
-    await Alumnos.create({
-      expediente: exp,
-      nip,
-    });
-    return res.status(200).json({ message: "Alumno creado exitosamente" });
-  } catch (error) {
-    return res.status(401).json({ message: "El alumno ya existe" });
-  }
-};
 
 exports.loginID = async (req, res, next) => {
   const { exp, nip } = req.body;
@@ -70,3 +58,17 @@ exports.alumnoInfo = async (req, res, next) => {
     return res.status(200).json({ code: 200, message: 'algo salio mal' });
   }
 };
+
+exports.consultaEscolar = async (req, res, next) => {
+  const { exp } = req.body;
+
+  let consultaData;
+
+  try {
+    const datos = await MateriasCursadas.findAll({where:{alumnoExpediente: exp}})
+    consultaData = datos
+    return res.status(200).json({ code: 200, message: consultaData });
+  } catch(error){
+    return res.status(200).json({ code: 200, message: 'algo salio mal' });
+  }
+}
