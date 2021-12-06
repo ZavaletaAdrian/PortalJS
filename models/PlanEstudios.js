@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const db = require('../config/db')
 const Alumnos = require('../models/Alumnos')
-const MateriasGeneral = require('../models/MateriasGeneral')
+const MateriasPlanEstudios = require('../models/MateriasPlanEstudios')
 
 const PlanEstudios = db.define('planEstudios',{
     id: {
@@ -23,7 +23,7 @@ PlanEstudios.hasOne(Alumnos,{
     }
 })
 
-PlanEstudios.hasMany(MateriasGeneral,{
+PlanEstudios.hasMany(MateriasPlanEstudios,{
     foreignKey: {
         name: 'planEstudiosId',
         allowNull: true
