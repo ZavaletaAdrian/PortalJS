@@ -12,9 +12,5 @@ const Carrera = db.define('carrera',{
     clave:Sequelize.INTEGER
 })
 
-
-
-
-
-
+Carrera.hasMany(Alumnos)
 module.exports = Carrera

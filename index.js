@@ -13,7 +13,6 @@ require('./models/Institucion')
 require('./models/MateriasEnCurso')
 require('./models/MateriasPlanEstudios')
 require('./models/Municipios')
-require('./models/Paises')
 require('./models/Profesor')
 require('./models/MateriasCursadas')
 

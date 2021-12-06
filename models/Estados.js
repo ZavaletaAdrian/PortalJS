@@ -12,11 +12,5 @@ const Estados = db.define('estados',{
     
 })
 
-Estados.hasMany(Municipios,{
-    foreignKey: {
-        name: 'estadoPerteneceId',
-        allowNull: true
-    }
-})
 
 module.exports = Estados

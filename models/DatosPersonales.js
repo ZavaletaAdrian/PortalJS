@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const db = require('../config/db')
-const Alumnos = require('../models/Alumnos')
-const Profesor = require('../models/Profesor')
+
+const Municipios = require('./Municipios')
 
 const DatosPersonales = db.define('datosPersonales',{
     id: {
@@ -10,6 +10,7 @@ const DatosPersonales = db.define('datosPersonales',{
         autoIncrement: true
     },
     nombre: Sequelize.STRING,
+    paisNacimiento: Sequelize.STRING,
     calleYnumero: Sequelize.STRING,
     colonia: Sequelize.STRING,
     codigoPostal: Sequelize.INTEGER,
@@ -19,18 +20,7 @@ const DatosPersonales = db.define('datosPersonales',{
     telefonoCelular: Sequelize.STRING,
 })
 
-DatosPersonales.hasOne(Alumnos,{
-    foreignKey: {
-        name: 'datosPersonalesId',
-        allowNull: true
-    }
-})
-
-DatosPersonales.hasOne(Profesor,{
-    foreignKey: {
-        name: 'datosPersonalesId',
-        allowNull: true
-    }
-})
+DatosPersonales.hasOne(Municipios)
+DatosPersonales.hasOne(Municipios,{foreignKey:{name:'municipioNacimientoId'}})
 
 module.exports = DatosPersonales

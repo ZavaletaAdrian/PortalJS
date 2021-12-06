@@ -14,7 +14,6 @@ const Institucion = require("../models/Institucion");
 const Municipios = require("../models/Municipios");
 const DatosPadres = require("../models/DatosPadres");
 const DatosPersonales = require("../models/DatosPersonales");
-const Paises = require("../models/Paises");
 const Estados = require("../models/Estados");
 
 exports.crearAlumno = async (req, res, next) => {
@@ -56,13 +55,16 @@ exports.loginID = async (req, res, next) => {
 exports.alumnoInfo = async (req, res, next) => {
   const { id } = req.body;
 
-
+  let alumno_data
+  // let data = []
   try {
-
-    const alumno = await Alumnos.findOne({where: { expediente: id },include: [{model:Carrera, as: 'carrera'}]});
-    console.log(alumno)
-    return res.status(200).json({ code: 200, message: alumno });
-    // const carrera = await Carrera.findOne({where: })
+    const alumno = await Alumnos.findOne({where:{expediente:id},include:{all:true,nested:true}})
+    // data.push(alumno.dataValues)
+    alumno_data = alumno
+    const carrera = await Carrera.findOne({where:{id:alumno.carreraId}})
+    alumno_data.carreraId = carrera.dataValues
+    console.log(alumno_data)
+    return res.status(200).json({ code: 200, message: alumno_data });
   }catch(error){
     console.log(error)
     return res.status(200).json({ code: 200, message: 'algo salio mal' });

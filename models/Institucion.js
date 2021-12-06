@@ -12,11 +12,5 @@ const Institucion = db.define('institucion',{
     clave:Sequelize.INTEGER
 })
 
-Institucion.hasOne(Alumnos,{
-    foreignKey: {
-        name: 'institucionId',
-        allowNull: true
-    }
-})
 
 module.exports = Institucion
