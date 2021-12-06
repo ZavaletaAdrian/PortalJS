@@ -2,7 +2,6 @@
 const db = require("../config/db");
 const jwt = require("jsonwebtoken");
 const Alumnos = require("../models/Alumnos");
-const Sequelize = require("sequelize");
 const bcrypt = require("bcrypt-nodejs");
 
 //Models
