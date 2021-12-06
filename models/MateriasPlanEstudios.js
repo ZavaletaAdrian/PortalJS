@@ -8,7 +8,7 @@ const MateriasPlanEstudios = db.define('materiasPlanEstudios',{
         type:Sequelize.INTEGER,
         primaryKey: true,
     },
-    nombre:Sequelize.INTEGER,
+    nombre:Sequelize.STRING,
     semestre:Sequelize.INTEGER,
     preRequisitos:Sequelize.STRING,
     obli:Sequelize.INTEGER,

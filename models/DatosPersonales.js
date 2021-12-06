@@ -2,6 +2,8 @@ const Sequelize = require('sequelize')
 const db = require('../config/db')
 
 const Municipios = require('./Municipios')
+const Profesor = require('./Profesor')
+const Alumno = require('./Alumnos')
 
 const DatosPersonales = db.define('datosPersonales',{
     id: {
@@ -22,5 +24,7 @@ const DatosPersonales = db.define('datosPersonales',{
 
 DatosPersonales.hasOne(Municipios)
 DatosPersonales.hasOne(Municipios,{foreignKey:{name:'municipioNacimientoId'}})
+DatosPersonales.hasOne(Profesor);
+DatosPersonales.hasOne(Alumno);
 
 module.exports = DatosPersonales

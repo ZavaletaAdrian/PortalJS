@@ -1,7 +1,5 @@
 const Sequelize = require('sequelize')
 const db = require('../config/db')
-const DatosPersonales = require('../models/DatosPersonales')
-const Estados = require('./Estados')
 
 const Municipios = db.define('municipios',{
     id: {

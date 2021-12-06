@@ -3,8 +3,6 @@ const db = require('../config/db')
 const bcrypt = require('bcrypt-nodejs')
 const MateriasEnCurso = require('../models/MateriasEnCurso')
 const MateriasCursadas = require('./MateriasCursadas')
-const Institucion = require('./Institucion')
-const DatosPersonales = require('./DatosPersonales')
 
 const Alumnos = db.define('alumnos',{
     expediente: {
@@ -51,11 +49,13 @@ const Alumnos = db.define('alumnos',{
     }
 })
 
-Alumnos.hasMany(MateriasEnCurso)
+Alumnos.hasMany(MateriasEnCurso, {
+    foreignKey: {
+        name: 'alumnoId',
+        allowNull: true
+    }
+})
 Alumnos.hasOne(MateriasCursadas)
 
-Alumnos.hasOne(Institucion)
-
-Alumnos.hasOne(DatosPersonales)
 
 module.exports = Alumnos

@@ -12,5 +12,7 @@ const Institucion = db.define('institucion',{
     clave:Sequelize.INTEGER
 })
 
+Institucion.hasOne(Alumnos)
+
 
 module.exports = Institucion
