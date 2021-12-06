@@ -57,54 +57,15 @@ exports.loginID = async (req, res, next) => {
 exports.alumnoInfo = async (req, res, next) => {
   const { id } = req.body;
 
-  const alumno = Alumnos.findOne({
-    where: { expediente: id },
-    include: [
-      //DatosPadres
-      {
-        model: DatosPadres, 
-      },
-      //MateriasCursadas
-      
-      //MateriasEnCurso
-      /*{
-        model: MateriasEnCurso, 
-        include: [
-          Profesor,
-          MateriasPlanEstudios
-        ]  
-      },
-      //PlanEstudios
-      {
-        model: PlanEstudios, 
-        include: [
-          MateriasPlanEstudios
-        ] 
-      },
-      //Carrera 
-      {
-        model: Carrera,
-      },
-      //Institucion
-      {
-        model: Institucion,
-      },
-      //DatosPersonales
-      {
-        model: DatosPersonales,
-        include: [
-          Paises,
-          {
-            model: Municipios,
-            include: [
-              Estados
-            ]
-          },
-        ]
-      },
-      */
-    ]
-  });
-  console.log(alumno);
-  return res.status(200).json({ code: 200, message: alumno });
+
+  try {
+
+    const alumno = await Alumnos.findOne({where: { expediente: id },include: [{model:Carrera, as: 'carrera'}]});
+    console.log(alumno)
+    return res.status(200).json({ code: 200, message: alumno });
+    // const carrera = await Carrera.findOne({where: })
+  }catch(error){
+    console.log(error)
+    return res.status(200).json({ code: 200, message: 'algo salio mal' });
+  }
 };

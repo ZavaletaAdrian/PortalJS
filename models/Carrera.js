@@ -12,11 +12,9 @@ const Carrera = db.define('carrera',{
     clave:Sequelize.INTEGER
 })
 
-Carrera.hasOne(Alumnos,{
-    foreignKey: {
-        name: 'carreraId',
-        allowNull: true
-    }
-})
+
+
+
+
 
 module.exports = Carrera

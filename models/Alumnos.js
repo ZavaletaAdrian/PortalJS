@@ -3,6 +3,7 @@ const db = require('../config/db')
 const bcrypt = require('bcrypt-nodejs')
 const MateriasEnCurso = require('../models/MateriasEnCurso')
 const MateriasCursadas = require('./MateriasCursadas')
+const Carrera = require('./Carrera')
 
 const Alumnos = db.define('alumnos',{
     expediente: {
@@ -62,5 +63,7 @@ Alumnos.hasOne(MateriasCursadas,{
         allowNull: true
     }
 })
+
+Alumnos.hasOne(Carrera)
 
 module.exports = Alumnos
