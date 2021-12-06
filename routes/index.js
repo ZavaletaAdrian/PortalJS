@@ -10,9 +10,17 @@ module.exports = function () {
   router.post("/loginTrabajador", trabajadorController.loginID);
   //Data
   router.get("/alumnoInfo", AlumnosControllers.alumnoInfo);
-  //Post /crearAlumno -- Input: exp+nip -- Output: generar un alumno
-  router.post("/crearAlumno", AlumnosControllers.crearAlumno);
+  //consultaEscolar
+  router.get("/consultaEscolar", AlumnosControllers.consultaEscolar);
   //Post /crearTrabajador -- Input: numTrabajador+nip -- Output: generar un alumno
   router.post("/crearTrabajador", trabajadorController.crearTrabajador);
+  //GET /datosTrabajador --
+  router.get("/datosTrabajador", trabajadorController.datosTrabajador);
+  //Post /asignarCalificacion --
+  router.post("/asignarCalificacion", trabajadorController.asignarCalificacion);
+  //altaAlumno
+  router.post("/altaAlumno", trabajadorController.altaAlumno);
+  //bajaAlumno
+  router.post("/bajaAlumno", trabajadorController.bajaAlumno);
   return router;
 };
