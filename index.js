@@ -30,26 +30,18 @@ db.sync()
 
 const app = express()
 
+app.use(cors);
+app.use(morgan('dev'));
 // The routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.get("/", index);
+
 app.use('/',routes())
 
 app.use(notFound);
 
-// First for production and second for dev
-// const host = process.env.HOST || '192.168.1.254'
-// const port = process.env.PORT || 3000
-// app.listen(port,host,()=>{
-//     console.log('Server listening on port 3000')
-// })
 app.listen(process.env.PORT || 3000, () =>{
     console.log('Server is running...');
 });
-
-// const PORT = process.env.PORT || 80;
-// var server = app.listen(PORT, function() {
-//     var host = server.address().address;
-//     var port = server.address().port;
-//     console.log("server is listening at http://%s:%s", host, port);
-// });
