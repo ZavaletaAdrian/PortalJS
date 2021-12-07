@@ -41,12 +41,12 @@ exports.loginID = async (req, res, next) => {
 };
 
 exports.alumnoInfo = async (req, res, next) => {
-  const { exp } = req.body;
+  const { id } = req.body;
 
   let alumno_data
   // let data = []
   try {
-    const alumno = await Alumnos.findOne({where:{expediente:exp},include:{all:true,nested:true}})
+    const alumno = await Alumnos.findOne({where:{expediente:id},include:{all:true,nested:true}})
     // data.push(alumno.dataValues)
     alumno_data = alumno
     const carrera = await Carrera.findOne({where:{id:alumno.carreraId}})
