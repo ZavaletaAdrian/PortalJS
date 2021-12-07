@@ -30,9 +30,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/',routes())
 
 // First for production and second for dev
-const host = process.env.HOST || 'https://portal-uaq.herokuapp.com/'
-const port = process.env.PORT || 3000
-
-app.listen(port,host,()=>{
-    console.log('Server listening on port 3000')
-})
+// const host = process.env.HOST || '0.0.0.0'
+// const port = process.env.PORT || 3000
+// app.listen(port,host,()=>{
+//     console.log('Server listening on port 3000')
+// })
+app.listen(process.env.PORT || 3000, () =>{
+    console.log('Server is running...');
+});
