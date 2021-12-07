@@ -32,7 +32,7 @@ exports.loginID = async (req, res, next) => {
 
     const token = jwt.sign(
       {
-        exp: alumno.exp,
+        expediente: alumno.exp,
       },
       "debugkey"
     );
@@ -50,7 +50,7 @@ exports.alumnoInfo = async (req, res, next) => {
     // data.push(alumno.dataValues)
     alumno_data = alumno
     const carrera = await Carrera.findOne({where:{id:alumno.carreraId}})
-    alumno_data.carreraId = carrera.dataValues
+    alumno_data.carreraId = carrera
     console.log(alumno_data)
     return res.status(200).json({ code: 200, message: alumno_data });
   }catch(error){
