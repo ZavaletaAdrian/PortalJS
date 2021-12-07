@@ -38,11 +38,11 @@ app.use('/',routes())
 app.use(notFound);
 
 // First for production and second for dev
-const host = process.env.HOST || '192.168.1.254'
-const port = process.env.PORT || 3000
-app.listen(port,host,()=>{
-    console.log('Server listening on port 3000')
-})
+// const host = process.env.HOST || '192.168.1.254'
+// const port = process.env.PORT || 3000
+// app.listen(port,host,()=>{
+//     console.log('Server listening on port 3000')
+// })
 app.listen(process.env.PORT || 3000, () =>{
     console.log('Server is running...');
 });
