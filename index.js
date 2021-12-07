@@ -31,7 +31,6 @@ db.sync()
 const app = express()
 
 app.use(cors);
-app.use(morgan('dev'));
 // The routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
