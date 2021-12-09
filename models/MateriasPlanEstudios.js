@@ -11,7 +11,7 @@ const MateriasPlanEstudios = db.define('materiasPlanEstudios',{
     nombre:Sequelize.STRING,
     semestre:Sequelize.INTEGER,
     preRequisitos:Sequelize.STRING,
-    obli:Sequelize.INTEGER,
+    obli:Sequelize.STRING,
     creditos:Sequelize.INTEGER,
     
 })

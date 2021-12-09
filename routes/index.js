@@ -2,25 +2,49 @@ const express = require("express");
 const router = express.Router();
 const AlumnosControllers = require("../controllers/AlumnosController");
 const trabajadorController = require("../controllers/trabajadorController");
+const auth  = require('../middleware/auth') 
 
 module.exports = function () {
-  //post /login -- Input: EXP+NIP -- Output: IDUsuario
+
+  /*----------Auth-----------*/
+  /* login alumno */
   router.post("/loginAlumno", AlumnosControllers.loginID);
-  //Post /login -- Input: NumTrabajador+NIP -- Output: IDTrabajador
+  /* login trabajador */
   router.post("/loginTrabajador", trabajadorController.loginID);
-  //Data
-  router.get("/alumnoInfo", AlumnosControllers.alumnoInfo);
-  //consultaEscolar
-  router.get("/consultaEscolar", AlumnosControllers.consultaEscolar);
-  //Post /crearTrabajador -- Input: numTrabajador+nip -- Output: generar un alumno
+  
+  /*----------Alumno-----------*/
+  /* GET alumno */
+  router.get("/alumnoInfo",
+    auth, 
+    AlumnosControllers.alumnoInfo);
+  /* POST del alumno */
+  router.post("/altaAlumno", 
+    auth,
+    trabajadorController.altaAlumno);
+  /* PATCH alumno */
+  router.patch("/bajaAlumno", 
+    auth,
+    trabajadorController.bajaAlumno);
+
+    router.get("/consultaEscolar", AlumnosControllers.consultaEscolar);
+  /*----------Trabajador-----------*/
+
+  /* POST trabajador */
   router.post("/crearTrabajador", trabajadorController.crearTrabajador);
-  //GET /datosTrabajador --
-  router.get("/datosTrabajador", trabajadorController.datosTrabajador);
-  //Post /asignarCalificacion --
+  /* GET trabajador */
+  router.get("/datosTrabajador",
+    auth,
+    trabajadorController.datosTrabajador);
+  
+  /* Asignar calificacion */
   router.post("/asignarCalificacion", trabajadorController.asignarCalificacion);
-  //altaAlumno
-  router.post("/altaAlumno", trabajadorController.altaAlumno);
-  //bajaAlumno
-  router.post("/bajaAlumno", trabajadorController.bajaAlumno);
+  
+  
+
+  router.get("/getAlumnos", auth, AlumnosControllers.getAlumnos);
+
+  // router.post("/token", auth);
+
+  // router.posy("/materiasAlumno")
   return router;
 };

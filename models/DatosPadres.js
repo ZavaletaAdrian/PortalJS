@@ -11,7 +11,7 @@ const DatosPadres = db.define('datosPadres',{
     apellidoPaterno: Sequelize.STRING,
     apellidoMaterno: Sequelize.STRING,
     nombre: Sequelize.STRING,
-    fechaNacimiento:Sequelize.DATE,
+    fechaNacimiento:Sequelize.DATEONLY,
     telefono: Sequelize.STRING
 })
 

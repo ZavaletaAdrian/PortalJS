@@ -33,7 +33,7 @@ const Alumnos = db.define('alumnos',{
     promedio: {type: Sequelize.FLOAT,allowNull: true},
     creditosObtenidos: {type: Sequelize.INTEGER,allowNull: true},
     materiasAprobadas: {type: Sequelize.INTEGER,allowNull: true},
-    fechaIngreso: {type: Sequelize.DATEONLY,allowNull: true},
+    fechaIngreso: {type: Sequelize.DATEONLY,allowNull: true, defaultValue: Sequelize.NOW},
     activo: {
         type:Sequelize.INTEGER,
         // 0 active 1 inactive

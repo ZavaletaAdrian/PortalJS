@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize')
 const db = require('../config/db')
 
-const Municipios = require('./Municipios')
 const Profesor = require('./Profesor')
 const Alumno = require('./Alumnos')
 
@@ -13,17 +12,19 @@ const DatosPersonales = db.define('datosPersonales',{
     },
     nombre: Sequelize.STRING,
     paisNacimiento: Sequelize.STRING,
+    municipioNacimiento: Sequelize.STRING,
+    estadoNacimiento: Sequelize.STRING,
+    estado: Sequelize.STRING,
+    municipio: Sequelize.STRING,
     calleYnumero: Sequelize.STRING,
     colonia: Sequelize.STRING,
     codigoPostal: Sequelize.INTEGER,
-    fechaNacimiento: Sequelize.DATE,
+    fechaNacimiento: Sequelize.DATEONLY,
     telefonoFijo: Sequelize.STRING,
     email: Sequelize.STRING,
     telefonoCelular: Sequelize.STRING,
 })
 
-DatosPersonales.hasOne(Municipios)
-DatosPersonales.hasOne(Municipios,{foreignKey:{name:'municipioNacimientoId'}})
 DatosPersonales.hasOne(Profesor);
 DatosPersonales.hasOne(Alumno);
 

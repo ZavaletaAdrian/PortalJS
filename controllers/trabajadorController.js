@@ -7,6 +7,7 @@ const MateriasEnCurso = require("../models/MateriasEnCurso");
 const MateriasPlanEstudios = require("../models/MateriasPlanEstudios");
 const MateriasCursadas = require("../models/MateriasCursadas");
 const bcrypt = require("bcrypt-nodejs");
+const DatosPadres = require("../models/DatosPadres");
 
 exports.crearTrabajador = async (req, res, next) => {
   const { numTrabajador, nip } = req.body;
@@ -39,17 +40,18 @@ exports.loginID = async (req, res, next) => {
 
     const token = jwt.sign(
       {
-        numTrabajador: trabajador.numTrabajador,
+        "numTrabajador": trabajador.numTrabajador,
       },
       "debugkey"
     );
-    return res.status(200).json({ message: token });
+    return res.status(200).json({ message: token ,isAdmin: trabajador.admin });
   });
 };
 
 exports.datosTrabajador = async (req, res, next) => {
-  const { numTrabajador } = req.body;
+  const { numTrabajador } = req.user;
 
+  console.log(numTrabajador)
   let trabajadorData;
 
   try {
@@ -62,7 +64,25 @@ exports.datosTrabajador = async (req, res, next) => {
       where: { id: trabajador.datosPersonaleId },
     });
     trabajadorData.datosPersonaleId = datosPer.dataValues;
-    console.log(trabajadorData);
+
+
+    var materiaData = []
+    // let materiaData = await MateriasPlanEstudios.findAll({where:{cveMat:alumno.materiasEnCursos}})
+    // alumno.materiasEnCursos.materiasPlanEstudiosId
+    trabajadorData.materiasEnCursos.forEach(e => {
+      materiaData.push(MateriasPlanEstudios.findOne({where:{cveMat:e.materiasPlanEstudiosId}}))
+      // console.log()
+    });
+    await Promise.all(materiaData)
+    .then((r)=>{
+      r.forEach((e,i)=>{
+        trabajadorData.materiasEnCursos[i].materiasPlanEstudiosId = e
+      })
+    })
+    .catch((e)=>{
+      console.log(e)
+    })
+
     return res.status(200).json({ message: trabajadorData }); //"Error al obtener datos del trabajador"
   } catch (error) {
     return res
@@ -121,31 +141,104 @@ exports.asignarCalificacion = async (req, res, next) => {
 };
 
 exports.altaAlumno = async (req, res, next) => {
-  const { exp, nip } = req.body;
+  const {data} = req.body;
+  const { 
+    nombre,
+    expediente,
+    nip,
+    paisNacimiento,
+    estadoNacimiento,
+    municipioNacimiento,
+    estadoActual,
+    municipioActual,
+    calleYnumero,
+    colonia,
+    codigoPostal,
+    fechaNacimiento,
+    telefonoFijo,
+    telefonoCelular,
+    email} = data
+
+  const {datosPadre} = data
+  const {datosMadre} = data
+
+  const paternoP = datosPadre.paterno
+  const maternoP = datosPadre.materno
+  const nombreP = datosPadre.nombre
+  const fechaP = datosPadre.fechaNacimiento
+  const telefonoP = datosPadre.telefono
+
+  const paternoM = datosMadre.paterno
+  const maternoM = datosMadre.materno
+  const nombreM = datosMadre.nombre
+  const fechaM = datosMadre.fechaNacimiento
+  const telefonoM = datosMadre.telefono
+
+
+
   try {
-    await Alumnos.create({
-      expediente: exp,
+
+    const alumno = await Alumnos.create({
+      expediente,
       nip,
     });
+
+    const personales = await DatosPersonales.create({
+      nombre,
+      paisNacimiento,
+      municipioNacimiento,
+      estadoNacimiento,
+      estado: estadoActual,
+      municipio: municipioActual,
+      calleYnumero,
+      colonia,
+      codigoPostal,
+      fechaNacimiento,
+      telefonoFijo,
+      email,
+      telefonoCelular
+    })
+
+    const padre = await DatosPadres.create({
+      apellidoPaterno:paternoP,
+      apellidoMaterno:maternoP,
+      nombre:nombreP,
+      fechaNacimiento:fechaP,
+      telefono:telefonoP,
+    })
+
+    const madre = await DatosPadres.create({
+      apellidoPaterno:paternoM,
+      apellidoMaterno:maternoM,
+      nombre:nombreM,
+      fechaNacimiento:fechaM,
+      telefono:telefonoM,
+    })
+
+    alumno.datosPersonaleId = personales.id,
+    alumno.atosPadreId = padre.id,
+    alumno.datosMadreId = madre.id
+    alumno.save()
+
+    console.log('NO ERRRROROR')
+
     return res.status(200).json({ message: "Alumno creado exitosamente" });
   } catch (error) {
-    return res.status(401).json({ message: "El alumno ya existe" });
+    return res.status(200).json({ error: "409", message: "El alumno ya existe" });
   }
 };
 
 exports.bajaAlumno = async (req, res, next) => {
-  console.log("hola =)");
   const { exp } = req.body;
 
-  const AlumnoPorDarDeBaja = await Alumnos.findOne({
-    where: { expediente: exp },
-  });
-  console.log(AlumnoPorDarDeBaja);
-
+  console.log(exp)
   try {
-    AlumnoPorDarDeBaja.set({
-      activo: 0,
+
+    const AlumnoPorDarDeBaja = await Alumnos.findOne({
+      where: { expediente: exp },
     });
+  
+    AlumnoPorDarDeBaja.activo = 1
     await AlumnoPorDarDeBaja.save();
     return res
       .status(200)
@@ -153,6 +246,6 @@ exports.bajaAlumno = async (req, res, next) => {
   } catch (error) {
     return res
       .status(401)
-      .json({ message: "No se pudo dar de baja al alumno" });
+      .json({ message: "Algo salio mal" });
   }
 };

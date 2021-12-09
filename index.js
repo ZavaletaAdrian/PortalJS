@@ -8,17 +8,14 @@ require('./models/Carrera')
 require('./models/DatosPersonales')
 require('./models/DatosPadres')
 require('./models/DatosPersonales')
-require('./models/Estados')
 require('./models/Institucion')
 require('./models/MateriasEnCurso')
 require('./models/MateriasPlanEstudios')
-require('./models/Municipios')
 require('./models/Profesor')
 require('./models/MateriasCursadas')
 
 // Middlewares
 const auth = require("./middleware/auth");
-const cors = require("./middleware/cors");
 const index =  require("./middleware/index");
 const notFound = require("./middleware/notFound");
 
@@ -30,10 +27,17 @@ db.sync()
 
 const app = express()
 
-app.use(cors);
-// The routes
+const cors = require('cors')
+app.use(cors())
+// app.use((req,res,next)=>{
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next()
+// });
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 app.get("/", index);
 
