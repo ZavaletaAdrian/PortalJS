@@ -8,7 +8,7 @@ const MateriasEnCurso = db.define('materiasEnCurso',{
         primaryKey: true,
         autoIncrement: true
     },
-    grupo:Sequelize.STRING,
+    grupo:Sequelize.INTEGER,
 })
 
 

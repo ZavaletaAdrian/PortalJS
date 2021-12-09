@@ -186,3 +186,19 @@ exports.getAlumnos = async (req,res,next) => {
     return res.status(500).json({message:"Algo salio mal"})
   }
 }
+
+exports.asignarInformacionCarrera = async (req,res,next) => {
+  const {expediente} = req.body.data
+  const {planEstudioId,carreraId,institucionId} = req.body.data
+  console.log(expediente,planEstudioId,carreraId,institucionId)
+  try {
+    const alumno = await Alumnos.findOne({where:{expediente}})
+    alumno.planEstudioId = planEstudioId
+    alumno.carreraId = carreraId
+    alumno.institucionId = institucionId
+    alumno.save()
+    return res.status(200).json({message:"Asignaciones echas correctamente"})
+  } catch(e) {
+    return res.status(500).json({message:"Algo salio mal"})
+  }
+}

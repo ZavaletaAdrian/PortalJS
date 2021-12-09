@@ -9,7 +9,7 @@ const Profesor = db.define('profesor',{
         primaryKey: true,
         autoIncrement: true
     },
-    numTrabajador:Sequelize.INTEGER,
+    numTrabajador:{type:Sequelize.INTEGER,unique: true},
     nip: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -20,7 +20,7 @@ const Profesor = db.define('profesor',{
         }
     },
     admin:Sequelize.INTEGER,
-    activo:Sequelize.INTEGER,
+    activo:{type:Sequelize.INTEGER,defaultValue:0},
 },{
     hooks: {
         beforeCreate(trabajador) {

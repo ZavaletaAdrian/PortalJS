@@ -10,14 +10,57 @@ const bcrypt = require("bcrypt-nodejs");
 const DatosPadres = require("../models/DatosPadres");
 
 exports.crearTrabajador = async (req, res, next) => {
-  const { numTrabajador, nip } = req.body;
-  //console.log( numTrabajador + " // " + nip);
+  const {
+    nombre,
+    paisNacimiento,
+    municipioNacimiento,
+    estadoNacimiento,
+    estadoActual,
+    municipioActual,
+    calleYnumero,
+    colonia,
+    codigoPostal,
+    fechaNacimiento,
+    telefonoFijo,
+    email,
+    telefonoCelular
+  } = req.body.data
 
+  const { 
+    numTrabajador,
+    nip,
+   } = req.body.data;
+
+   
   try {
-    await Trabajadores.create({
+    console.log(req.body.checked)
+    let admin = 0
+    if(req.body.checked){
+      admin = 1
+    }
+    const trabajador = await Trabajadores.create({
       numTrabajador: numTrabajador,
       nip,
+      admin
     });
+
+    const datosPersonales = await DatosPersonales.create({
+      nombre,
+      paisNacimiento,
+      municipioNacimiento,
+      estadoNacimiento,
+      estado:estadoActual,
+      municipio:municipioActual,
+      calleYnumero,
+      colonia,
+      codigoPostal,
+      fechaNacimiento,
+      telefonoFijo,
+      email,
+      telefonoCelular
+    })
+    trabajador.datosPersonaleId = datosPersonales.id
+    trabajador.save()
     return res.status(200).json({ message: "Trabajador creado exitosamente" });
   } catch (error) {
     return res.status(401).json({ message: "El trabajador ya existe" });
@@ -51,37 +94,40 @@ exports.loginID = async (req, res, next) => {
 exports.datosTrabajador = async (req, res, next) => {
   const { numTrabajador } = req.user;
 
-  console.log(numTrabajador)
+  // console.log(numTrabajador)
   let trabajadorData;
 
   try {
+
     const trabajador = await Trabajadores.findOne({
       where: { numTrabajador: numTrabajador },
       include: { all: true, nested: true },
     });
+
     trabajadorData = trabajador;
     const datosPer = await DatosPersonales.findOne({
       where: { id: trabajador.datosPersonaleId },
     });
-    trabajadorData.datosPersonaleId = datosPer.dataValues;
+
+    trabajadorData.datosPersonaleId = datosPer;
 
 
-    var materiaData = []
-    // let materiaData = await MateriasPlanEstudios.findAll({where:{cveMat:alumno.materiasEnCursos}})
-    // alumno.materiasEnCursos.materiasPlanEstudiosId
-    trabajadorData.materiasEnCursos.forEach(e => {
-      materiaData.push(MateriasPlanEstudios.findOne({where:{cveMat:e.materiasPlanEstudiosId}}))
-      // console.log()
-    });
-    await Promise.all(materiaData)
-    .then((r)=>{
-      r.forEach((e,i)=>{
-        trabajadorData.materiasEnCursos[i].materiasPlanEstudiosId = e
-      })
-    })
-    .catch((e)=>{
-      console.log(e)
-    })
+    // var materiaData = []
+    // // let materiaData = await MateriasPlanEstudios.findAll({where:{cveMat:alumno.materiasEnCursos}})
+    // // alumno.materiasEnCursos.materiasPlanEstudiosId
+    // trabajadorData.materiasEnCursos.forEach(e => {
+    //   materiaData.push(MateriasPlanEstudios.findOne({where:{cveMat:e.materiasPlanEstudiosId}}))
+    //   // console.log()
+    // });
+    // await Promise.all(materiaData)
+    // .then((r)=>{
+    //   r.forEach((e,i)=>{
+    //     trabajadorData.materiasEnCursos[i].materiasPlanEstudiosId = e
+    //   })
+    // })
+    // .catch((e)=>{
+    //   console.log(e)
+    // })
 
     return res.status(200).json({ message: trabajadorData }); //"Error al obtener datos del trabajador"
   } catch (error) {
@@ -183,6 +229,8 @@ exports.altaAlumno = async (req, res, next) => {
       nip,
     });
 
+    
+
     const personales = await DatosPersonales.create({
       nombre,
       paisNacimiento,
@@ -216,7 +264,7 @@ exports.altaAlumno = async (req, res, next) => {
     })
 
     alumno.datosPersonaleId = personales.id,
-    alumno.atosPadreId = padre.id,
+    alumno.datosPadreId = padre.id,
     alumno.datosMadreId = madre.id
     alumno.save()
 
@@ -229,13 +277,12 @@ exports.altaAlumno = async (req, res, next) => {
 };
 
 exports.bajaAlumno = async (req, res, next) => {
-  const { exp } = req.body;
+  const { expediente } = req.body;
 
-  console.log(exp)
   try {
 
     const AlumnoPorDarDeBaja = await Alumnos.findOne({
-      where: { expediente: exp },
+      where: { expediente },
     });
   
     AlumnoPorDarDeBaja.activo = 1
