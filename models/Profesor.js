@@ -2,14 +2,14 @@ const Sequelize = require('sequelize')
 const db = require('../config/db')
 const bcrypt = require('bcrypt-nodejs')
 const MateriasEnCurso = require('../models/MateriasEnCurso')
+const ProfeMateriaDada = require('../models/ProfeMateriaDada')
 
 const Profesor = db.define('profesor',{
-    id: {
+    numTrabajador: {
         type:Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    numTrabajador:{type:Sequelize.INTEGER,unique: true},
     nip: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -28,6 +28,8 @@ const Profesor = db.define('profesor',{
         }
     }
 });
+
+Profesor.hasOne(ProfeMateriaDada)
 
 Profesor.hasMany(MateriasEnCurso,{
     foreignKey: {

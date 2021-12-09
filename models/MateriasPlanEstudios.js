@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 const db = require('../config/db')
 const MateriasCursadas = require('./MateriasCursadas')
 const MateriasEnCurso = require('./MateriasEnCurso')
+const ProfeMateriaDada = require('../models/ProfeMateriaDada')
 
 const MateriasPlanEstudios = db.define('materiasPlanEstudios',{
     cveMat: {
@@ -15,6 +16,8 @@ const MateriasPlanEstudios = db.define('materiasPlanEstudios',{
     creditos:Sequelize.INTEGER,
     
 })
+
+MateriasPlanEstudios.hasOne(ProfeMateriaDada)
 
 MateriasPlanEstudios.hasOne(MateriasEnCurso,{
     foreignKey: {

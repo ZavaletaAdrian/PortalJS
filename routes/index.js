@@ -44,9 +44,18 @@ module.exports = function () {
   router.get("/datosTrabajador",
     auth,
     trabajadorController.datosTrabajador);
-  
+
+  /* GET materias dadas por el trabjador */
+  router.get("/materiasTrabajador",
+   auth,
+   trabajadorController.materiasTrabajador);
+   
+  /* GET grupo de materia dada por el trabjador */
+  router.post("/grupoMateria",
+   auth,
+   trabajadorController.grupoMateria);
   /* Asignar calificacion */
-  router.post("/asignarCalificacion", trabajadorController.asignarCalificacion);
+  router.post("/asignarCalificacion", auth,trabajadorController.asignarCalificacion);
   
   /*----------Plan Estudio-----------*/
   /* GET todos los planes de estudios */

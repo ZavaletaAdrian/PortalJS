@@ -8,6 +8,7 @@ const MateriasPlanEstudios = require("../models/MateriasPlanEstudios");
 const MateriasCursadas = require("../models/MateriasCursadas");
 const bcrypt = require("bcrypt-nodejs");
 const DatosPadres = require("../models/DatosPadres");
+const ProfeMateriaDada = require("../models/ProfeMateriaDada");
 
 exports.crearTrabajador = async (req, res, next) => {
   const {
@@ -139,48 +140,21 @@ exports.datosTrabajador = async (req, res, next) => {
 
 exports.asignarCalificacion = async (req, res, next) => {
   const {
-    numTrabajador,
-    matEnCurso,
-    calificacionFinal,
-    fechaExamen,
-    fechaPublicacionCalificacion,
-  } = req.body;
-
-  let materiaPorAsignar;
+    calificacion,
+    alumnoExpediente,
+    materiasPlanEstudiosId
+  } = req.body.data;
 
   try {
-    const asignacion = await MateriasEnCurso.findOne({
-      where: { id: matEnCurso },
-    });
-    materiaPorAsignar = asignacion;
-    const profe = await Trabajadores.findOne({
-      where: { numTrabajador: numTrabajador },
-    });
-    materiaPorAsignar.profesorId = profe.dataValues;
-    const matPlanEst = await MateriasPlanEstudios.findOne({
-      where: { cveMat: materiaPorAsignar.materiasPlanEstudiosId },
-    });
-    materiaPorAsignar.materiasPlanEstudiosId = matPlanEst.dataValues;
+    // TODO FALTA EL DELETE
+   const calificacion_asignada = await MateriasCursadas.create({
+    calificacion,
+    alumnoExpediente,
+    materiasPlanEstudiosId
+   })
+   
+   return res.status(200).json({ message: calificacion_asignada });
 
-    try {
-      await MateriasCursadas.create({
-        calificacion: calificacionFinal,
-        acta: Math.random(),
-        fechaExamen: fechaExamen,
-        fechaPublicacionCalificacion: fechaPublicacionCalificacion,
-        alumnoExpediente: materiaPorAsignar.alumnoId,
-        materiasPlanEstudiosId: materiaPorAsignar.materiasPlanEstudiosId.cveMat,
-      });
-      return res
-        .status(200)
-        .json({ message: "Asignacion correcta de calificacion" });
-    } catch (error) {
-      return res
-        .status(401)
-        .json({ message: "Error no se puso la calificacion" });
-    }
-
-    // return res.status(200).json({ message: materiaPorAsignar });
   } catch (error) {
     return res.status(401).json({ message: error });
   }
@@ -296,3 +270,71 @@ exports.bajaAlumno = async (req, res, next) => {
       .json({ message: "Algo salio mal" });
   }
 };
+
+exports.materiasTrabajador = async (req,res,next) => {
+  const {numTrabajador} = req.user
+  try{
+    let materias_data
+    const materias = await ProfeMateriaDada.findAll({where:{profesorNumTrabajador:numTrabajador}})
+    materias_data = materias
+
+    let querys = []
+    materias.forEach((e)=>{
+      querys.push(MateriasPlanEstudios.findOne({where:{cveMat:e.materiasPlanEstudioCveMat}}))
+    })
+    await Promise.all(querys)
+    .then((r)=>{
+      r.forEach((e,i)=>{
+        // console.log(materias_data[i].materiasPlanEstudioCveMat)
+        // console.log(e.dataValues)
+        materias_data[i].materiasPlanEstudioCveMat = e
+      })
+    }).catch(e=>console.log(e))
+
+    return res.status(200).json({ message: materias_data });
+  } catch(e){
+    console.log(e)
+    return res
+      .status(401)
+      .json({ message: "Algo salio mal" });
+  }
+}
+
+exports.grupoMateria = async (req,res,next) => {
+  // const {numTrabajador} = req.user
+  const {grupo,materiasPlanEstudiosId} = req.body.data //alomejor data
+  // console.log('KAAKAKA',req.body)
+  try {
+    const grupo_data = await MateriasEnCurso.findAll({where:{grupo,materiasPlanEstudiosId}})
+
+    let querys = []
+    grupo_data.forEach((e)=>{
+      querys.push(Alumnos.findOne({where:{expediente:e.alumnoId}}))
+    })
+    await Promise.all(querys)
+    .then((r)=>{
+      r.forEach((e,i)=>{
+        grupo_data[i].alumnoId = {expediente:e.expediente,datosPersonaleId:e.datosPersonaleId}
+      })
+    }).catch((e)=>console.log(e))
+
+    let querys2 = []
+    grupo_data.forEach((e,i)=>{
+      querys2.push(DatosPersonales.findOne({where:{id:e.alumnoId.datosPersonaleId}}))
+    })
+    await Promise.all(querys2)
+    .then((r)=>{
+      r.forEach((e,i)=>{
+        grupo_data[i].alumnoId.datosPersonaleId = e.nombre
+      })
+    }).catch((e)=>console.log(e))
+
+
+    return res.status(200).json({ message: grupo_data });
+  } catch(e) {
+    console.log(e)
+    return res
+      .status(401)
+      .json({ message: "Algo salio mal" });
+  }
+}
