@@ -113,23 +113,6 @@ exports.datosTrabajador = async (req, res, next) => {
     trabajadorData.datosPersonaleId = datosPer;
 
 
-    // var materiaData = []
-    // // let materiaData = await MateriasPlanEstudios.findAll({where:{cveMat:alumno.materiasEnCursos}})
-    // // alumno.materiasEnCursos.materiasPlanEstudiosId
-    // trabajadorData.materiasEnCursos.forEach(e => {
-    //   materiaData.push(MateriasPlanEstudios.findOne({where:{cveMat:e.materiasPlanEstudiosId}}))
-    //   // console.log()
-    // });
-    // await Promise.all(materiaData)
-    // .then((r)=>{
-    //   r.forEach((e,i)=>{
-    //     trabajadorData.materiasEnCursos[i].materiasPlanEstudiosId = e
-    //   })
-    // })
-    // .catch((e)=>{
-    //   console.log(e)
-    // })
-
     return res.status(200).json({ message: trabajadorData }); //"Error al obtener datos del trabajador"
   } catch (error) {
     return res
@@ -151,6 +134,10 @@ exports.asignarCalificacion = async (req, res, next) => {
     calificacion,
     alumnoExpediente,
     materiasPlanEstudiosId
+   })
+
+   await MateriasEnCurso.destroy({
+     where:{alumnoId:alumnoExpediente,materiasPlanEstudiosId:materiasPlanEstudiosId}
    })
    
    return res.status(200).json({ message: calificacion_asignada });

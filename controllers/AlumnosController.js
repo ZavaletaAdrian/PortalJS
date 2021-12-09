@@ -37,6 +37,7 @@ exports.loginID = async (req, res, next) => {
       );
       return res.status(200).json({ message: token });
     });
+
   } catch(e){
     res.status(500).json({message:"Usuario o contraseña incorrecta"})
   }
