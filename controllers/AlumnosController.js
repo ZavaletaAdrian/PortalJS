@@ -79,8 +79,8 @@ exports.alumnoInfo = async (req, res, next) => {
     })
 
     var profesorDataId = []
-    alumno.materiasEnCursos.forEach(e => {
-      profesorDataId.push(Profesor.findOne({where:{id:e.profesorId}}))
+    alumno.materiasEnCursos.forEach((e,i) => {
+      profesorDataId.push(Profesor.findOne({where:{numTrabajador:e.profesorId}}))
       // console.log()
     });
     await Promise.all(profesorDataId)
@@ -92,6 +92,13 @@ exports.alumnoInfo = async (req, res, next) => {
     .catch((e)=>{
       console.log(e)
     })
+
+    // console.log(alumno_data.materiasEnCursos)
+
+    // let querys = []
+    // alumno.materiasEnCursos.forEach((e,i)=>{
+    //   querys.push(DatosPersonales.findOne({where:{id:}}))
+    // })
 
     var profesorNombre = []
     alumno.materiasEnCursos.forEach(e => {
@@ -135,6 +142,7 @@ exports.alumnoInfo = async (req, res, next) => {
     })
 
     // console.log(alumno.planEstudioId)
+
     return res.status(200).json({ code: 200, message: alumno_data, materiasCursadas:materias_cursadas_data, planEstudio: planEstudioMaterias })
   }catch(error){
     console.log(error)
