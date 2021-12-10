@@ -34,6 +34,11 @@ module.exports = function () {
     auth,
     trabajadorController.bajaAlumno);
 
+  /* UPDATE editar alumno */
+  router.post("/actualizarAlumno", 
+  auth,
+  AlumnosControllers.actualizarAlumno);
+
   router.get("/consultaEscolar", AlumnosControllers.consultaEscolar);
 
   /*----------Trabajador-----------*/
@@ -44,6 +49,10 @@ module.exports = function () {
   router.get("/datosTrabajador",
     auth,
     trabajadorController.datosTrabajador);
+
+  router.post("/actualizarTrabajador",
+    auth,
+    trabajadorController.actualizarTrabajador);
 
   /* GET materias dadas por el trabjador */
   router.get("/materiasTrabajador",

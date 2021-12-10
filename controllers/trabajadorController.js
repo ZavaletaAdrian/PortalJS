@@ -325,3 +325,37 @@ exports.grupoMateria = async (req,res,next) => {
       .json({ message: "Algo salio mal" });
   }
 }
+
+exports.actualizarTrabajador = async (req,res,next) => {
+  const {numTrabajador} = req.user
+  const {
+    calleYnumero,
+    colonia,
+    codigoPostal,
+    estado,
+    municipio,
+    telefonoFijo,
+    email,
+    telefonoCelular,
+  } = req.body.data
+  try {
+    const trabajador = await Trabajadores.findOne({where:{numTrabajador}})
+    let datoPersonales = await DatosPersonales.findOne({where:{id:trabajador.datosPersonaleId}})
+    datoPersonales.calleYnumero = calleYnumero
+    datoPersonales.colonia = colonia
+    datoPersonales.codigoPostal = codigoPostal
+    datoPersonales.estado = estado
+    datoPersonales.municipio = municipio
+    datoPersonales.telefonoFijo = telefonoFijo
+    datoPersonales.email = email
+    datoPersonales.telefonoCelular = telefonoCelular
+    datoPersonales.save()
+    return res.status(200).json({message:"Datos actualizados correctamente"})
+
+  } catch(e){
+    console.log(e)
+    return res
+      .status(401)
+      .json({ message: "Algo salio mal" })
+  }
+}

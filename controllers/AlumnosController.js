@@ -203,3 +203,57 @@ exports.asignarInformacionCarrera = async (req,res,next) => {
     return res.status(500).json({message:"Algo salio mal"})
   }
 }
+
+exports.actualizarAlumno = async (req,res,next) => {
+  const {expediente} = req.user
+  const {
+    calleYnumero,
+    colonia,
+    codigoPostal,
+    estado,
+    municipio,
+    telefonoFijo,
+    email,
+    telefonoCelular,
+  } = req.body.data.form
+  const datosPadre = req.body.data.padreForm
+  const datosMadre = req.body.data.madreForm
+  try {
+    // console.log("KAKAKAKAKAKAKAK",datosPadre.apellidoPaterno)
+    const alumno = await Alumnos.findOne({where:{expediente}})
+    let datoPersonales = await DatosPersonales.findOne({where:{id:alumno.datosPersonaleId}})
+    datoPersonales.calleYnumero = calleYnumero
+    datoPersonales.colonia = colonia
+    datoPersonales.codigoPostal = codigoPostal
+    datoPersonales.estado = estado
+    datoPersonales.municipio = municipio
+    datoPersonales.telefonoFijo = telefonoFijo
+    datoPersonales.email = email
+    datoPersonales.telefonoCelular = telefonoCelular
+
+    let datosPadreE = await DatosPadres.findOne({where:{id:alumno.datosPadreId}})
+    console.log("PAAAAAAAAAAAAAADRE ",datosPadre.apellidoPaterno)
+
+    datosPadreE.apellidoPaterno = datosPadre.apellidoPaterno
+    datosPadreE.apellidoMaterno = datosPadre.apellidoMaterno
+    datosPadreE.nombre = datosPadre.nombre
+    datosPadreE.telefono = datosPadre.telefono
+
+    let datosMadreE = await DatosPadres.findOne({where:{id:alumno.datosMadreId}})
+    datosMadreE.apellidoPaterno = datosMadre.apellidoPaterno
+    datosMadreE.apellidoMaterno = datosMadre.apellidoMaterno
+    datosMadreE.nombre = datosMadre.nombre
+    datosMadreE.telefono = datosMadre.telefono
+
+    datoPersonales.save()
+    datosPadreE.save()
+    datosMadreE.save()
+
+    return res.status(200).json({message:"Datos actualizados correctamente"})
+
+  } catch(e) {
+    console.log(e)
+    return res.status(500).json({message:"Algo salio mal"})
+
+  }
+}
