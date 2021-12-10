@@ -61,7 +61,7 @@ exports.crearTrabajador = async (req, res, next) => {
       telefonoCelular
     })
     trabajador.datosPersonaleId = datosPersonales.id
-    trabajador.save()
+    await trabajador.save()
     return res.status(200).json({ message: "Trabajador creado exitosamente" });
   } catch (error) {
     return res.status(401).json({ message: "El trabajador ya existe" });
@@ -71,31 +71,25 @@ exports.crearTrabajador = async (req, res, next) => {
 exports.loginID = async (req, res, next) => {
   const { numTrabajador, nip } = req.body;
 
-  const trabajador = await Trabajadores.findOne({
-    where: { numTrabajador: numTrabajador },
-  });
+  // Login solo para administrativos
+  const trabajador = await Trabajadores.findOne({ where: { numTrabajador: numTrabajador,nip:nip, admin:1 } });
 
-  // TODO: aqui es donde regresan el token y lo unico que debe tener es el numero del trabajador
-  bcrypt.compare(nip, trabajador.nip, (err, valid) => {
-    if (err)
-      return res
-        .status(400)
-        .json({ message: "Numero de Trabajador y/o NIP incorrectos!" });
+  if(!trabajador) return  res.status(401).json({ msg: "Usuario o contraseña incorrecto" })
+  
+  const token = jwt.sign(
+    {
+      "numTrabajador":trabajador.numTrabajador,
+    },
+    'debugkey'
+  );
+  return res.status(200).json({ message: token });
 
-    const token = jwt.sign(
-      {
-        "numTrabajador": trabajador.numTrabajador,
-      },
-      "debugkey"
-    );
-    return res.status(200).json({ message: token ,isAdmin: trabajador.admin });
-  });
 };
 
 exports.datosTrabajador = async (req, res, next) => {
   const { numTrabajador } = req.user;
 
-  // console.log(numTrabajador)
+  console.log(req.user)
   let trabajadorData;
 
   try {
@@ -227,7 +221,7 @@ exports.altaAlumno = async (req, res, next) => {
     alumno.datosPersonaleId = personales.id,
     alumno.datosPadreId = padre.id,
     alumno.datosMadreId = madre.id
-    alumno.save()
+    await alumno.save()
 
     console.log('NO ERRRROROR')
 
@@ -349,7 +343,7 @@ exports.actualizarTrabajador = async (req,res,next) => {
     datoPersonales.telefonoFijo = telefonoFijo
     datoPersonales.email = email
     datoPersonales.telefonoCelular = telefonoCelular
-    datoPersonales.save()
+    await datoPersonales.save()
     return res.status(200).json({message:"Datos actualizados correctamente"})
 
   } catch(e){
@@ -358,4 +352,14 @@ exports.actualizarTrabajador = async (req,res,next) => {
       .status(401)
       .json({ message: "Algo salio mal" })
   }
+}
+
+exports.altaAlumno2 = async (req,res,next) => {
+  const {exp,nip} = req.body
+  await Alumnos.create({
+    expediente:exp,
+    nip
+  })
+  return res.status(200).json({message:"Datos actualizados correctamente"})
+
 }

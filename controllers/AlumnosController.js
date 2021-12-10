@@ -1,7 +1,7 @@
 // All that is related with Alumnos
 const db = require("../config/db");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt-nodejs");
+const bcrypt = require('bcrypt-nodejs')
 
 //Models
 const Alumnos = require("../models/Alumnos");
@@ -16,35 +16,26 @@ const DatosPersonales = require("../models/DatosPersonales");
 const MateriasCursadas = require("../models/MateriasCursadas");
 
 
-exports.loginID = async (req, res, next) => {
+exports.loginID =  async (req, res, next) => {
   const { exp, nip } = req.body;
 
-  try {
-    const alumno = await Alumnos.findOne({ where: { expediente: exp } });
-  
-    // TODO: aqui es donde regresan el token y lo unico que debe tener es el expediente del alumno
-    bcrypt.compare(nip, alumno.nip, (err, valid) => {
-      if (err)
-        return res
-          .status(500)
-          .json({ message: "Expediente y/o NIP incorrectos!" });
-  
-      const token = jwt.sign(
-        {
-          "expediente":alumno.expediente,
-        },
-        'debugkey'
-      );
-      return res.status(200).json({ message: token });
-    });
+  const alumno = await Alumnos.findOne({ where: { expediente: exp,nip:nip } });
 
-  } catch(e){
-    res.status(500).json({message:"Usuario o contraseña incorrecta"})
-  }
+  if(!alumno) return  res.status(401).json({ msg: "Usuario o contraseña incorrecto" })
+  
+  const token = jwt.sign(
+    {
+      "expediente":alumno.expediente,
+    },
+    'debugkey'
+  );
+  return res.status(200).json({ message: token });
+
 };
 
 exports.alumnoInfo = async (req, res, next) => {
   const { expediente } = req.user;
+  console.log("EXPEDIEEEEEEEEENTE",expediente)
   const id = expediente
   let alumno_data
   // let data = []
@@ -197,7 +188,7 @@ exports.asignarInformacionCarrera = async (req,res,next) => {
     alumno.planEstudioId = planEstudioId
     alumno.carreraId = carreraId
     alumno.institucionId = institucionId
-    alumno.save()
+    await alumno.save()
     return res.status(200).json({message:"Asignaciones echas correctamente"})
   } catch(e) {
     return res.status(500).json({message:"Algo salio mal"})
@@ -245,9 +236,9 @@ exports.actualizarAlumno = async (req,res,next) => {
     datosMadreE.nombre = datosMadre.nombre
     datosMadreE.telefono = datosMadre.telefono
 
-    datoPersonales.save()
-    datosPadreE.save()
-    datosMadreE.save()
+    await datoPersonales.await ()
+    await datosPadreE.save()
+    await datosMadreE.save()
 
     return res.status(200).json({message:"Datos actualizados correctamente"})
 

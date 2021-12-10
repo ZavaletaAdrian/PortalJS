@@ -21,12 +21,6 @@ const Profesor = db.define('profesor',{
     },
     admin:Sequelize.INTEGER,
     activo:{type:Sequelize.INTEGER,defaultValue:0},
-},{
-    hooks: {
-        beforeCreate(trabajador) {
-            trabajador.nip = bcrypt.hashSync(trabajador.password,bcrypt.genSaltSync(10))
-        }
-    }
 });
 
 Profesor.hasOne(ProfeMateriaDada)

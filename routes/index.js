@@ -24,7 +24,7 @@ module.exports = function () {
   router.post("/altaAlumno", 
     auth,
     trabajadorController.altaAlumno);
-  /* POST asignar la informacion de la carrera del alumno */
+
   router.post("/asignarInformacionCarrera", 
     auth,
     AlumnosControllers.asignarInformacionCarrera

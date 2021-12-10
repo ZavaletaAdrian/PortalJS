@@ -41,12 +41,6 @@ const Alumnos = db.define('alumnos',{
         allowNull: true,
     },
 
-}, {
-    hooks: {
-        beforeCreate(alumno) {
-            alumno.nip = bcrypt.hashSync(alumno.password,bcrypt.genSaltSync(10))
-        }
-    }
 })
 
 Alumnos.hasMany(MateriasEnCurso, {
