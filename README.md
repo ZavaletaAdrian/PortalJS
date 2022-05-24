@@ -1,1 +1,1 @@
-Recreation of web page Portal UAQ using an API REST with ExpressJS.
+API REST of PortalJS using Node.js and ExpressJS.
